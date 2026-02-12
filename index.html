@@ -178,7 +178,6 @@ document.getElementById("imgInput").addEventListener("change", function(e){
 document.getElementById("quoteInput").addEventListener("input", function(){
   const text = this.value;
   document.getElementById("quotePreview").innerText = "“" + text + "”";
-  applyMultiColorText();
 });
 
 /* SAVE */
@@ -249,6 +248,7 @@ function playSlide(){
   document.getElementById("previewImg").src = s.img || "";
   document.getElementById("bgBlur").src = s.img || "";
   document.getElementById("quotePreview").innerText = "“" + (s.text || "") + "”";
+  applyMultiColorText();
 
   speakSlide(s.text);
 }
