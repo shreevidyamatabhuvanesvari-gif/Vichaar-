@@ -3,132 +3,80 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Voice Thought Creator</title>
+<title>Voice Creator</title>
 
 <style>
 body{
   margin:0;
-  background:radial-gradient(circle,#000000,#1a0033,#000000);
-  font-family:'Noto Sans Devanagari',sans-serif;
+  background:black;
   color:white;
-  overflow:hidden;
   text-align:center;
+  font-family:sans-serif;
 }
 
-/* Main Text */
 #mainText{
-  position:absolute;
-  top:32%;
-  width:100%;
-  font-size:34px;
-  padding:0 25px;
+  margin-top:35%;
+  font-size:30px;
+  padding:20px;
   font-weight:bold;
-  line-height:1.4;
-  color:#ffffff;
-  text-shadow:
-    0 0 10px #fff,
-    0 0 20px #ff00ff,
-    0 0 30px #ff00ff;
-  animation:fadeIn 1.5s ease;
+  color:#fff;
+  text-shadow:0 0 15px #ff00ff;
 }
 
-@keyframes fadeIn{
-  from{opacity:0; transform:scale(0.9);}
-  to{opacity:1; transform:scale(1);}
-}
-
-/* Scrolling Line */
-#scrollLine{
-  position:absolute;
-  bottom:-60px;
-  width:100%;
-  font-size:22px;
-  color:#ffd700;
-  font-weight:bold;
-  animation:scrollUp 9s linear infinite;
-}
-
-@keyframes scrollUp{
-  0%{bottom:-60px;}
-  100%{bottom:100%;}
-}
-
-/* Controls */
-#controls{
-  position:absolute;
-  bottom:10px;
-  width:100%;
-}
-
-textarea,input{
-  width:88%;
+textarea{
+  width:85%;
   padding:10px;
-  margin:5px;
+  margin-top:20px;
   border-radius:10px;
-  border:none;
   font-size:16px;
 }
 
 button{
-  padding:11px 18px;
-  margin:6px;
+  padding:12px 20px;
+  margin:10px;
   border:none;
   border-radius:10px;
-  background:linear-gradient(90deg,#ff8c00,#ff0066);
+  background:#ff0066;
   color:white;
   font-size:16px;
-  cursor:pointer;
-  box-shadow:0 0 10px #ff0066;
 }
 </style>
 </head>
 <body>
 
-<div id="mainText">यहाँ आपका विचार दिखाई देगा</div>
-<div id="scrollLine">सोच ही भविष्य बनाती है...</div>
+<div id="mainText">यहाँ टेक्स्ट दिखाई देगा</div>
 
-<div id="controls">
-  <textarea id="textInput" placeholder="यहाँ मुख्य टेक्स्ट लिखें..."></textarea>
-  <input id="lineInput" placeholder="नीचे चलने वाली लाइन लिखें...">
+<textarea id="textInput" placeholder="यहाँ टेक्स्ट लिखें"></textarea>
+<br>
 
-  <br>
-  <button onclick="updateText()">✨ टेक्स्ट दिखाएँ</button>
-  <button onclick="playVoice()">🔊 महिला आवाज चलाएँ</button>
-</div>
+<button onclick="showText()">Text दिखाएँ</button>
+<button onclick="speak()">महिला Voice</button>
 
 <script>
-function updateText(){
-  mainText.innerText = textInput.value;
-  scrollLine.innerText = lineInput.value;
+function showText(){
+  mainText.innerText=textInput.value;
 }
 
-/* FEMALE VOICE */
-function playVoice(){
+function speak(){
 
-  let text = textInput.value;
+  let text=textInput.value;
 
-  if(text.trim()==""){
+  if(text==""){
     alert("पहले टेक्स्ट लिखें");
     return;
   }
 
-  let speech = new SpeechSynthesisUtterance(text);
+  let speech=new SpeechSynthesisUtterance(text);
+
   speech.lang="hi-IN";
-  speech.pitch=1.5;
+  speech.pitch=1.6;  // female tone
   speech.rate=0.9;
 
-  let voices = speechSynthesis.getVoices();
-
-  // Female type voice select
-  for(let v of voices){
-    if(v.name.includes("Google") || v.name.includes("female")){
-      speech.voice=v;
-      break;
-    }
-  }
-
+  // IMPORTANT FIX
   speechSynthesis.cancel();
-  speechSynthesis.speak(speech);
+  setTimeout(()=>{
+    speechSynthesis.speak(speech);
+  },200);
 }
 </script>
 
