@@ -3,177 +3,149 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reel Creator – Photo + Text + Voice</title>
+<title>ShriVidya Reel Creator</title>
 
 <style>
 body{
   margin:0;
-  background:black;
-  color:white;
   font-family:'Noto Sans Devanagari',sans-serif;
-  overflow:hidden;
-}
-
-/* MAIN SCREEN */
-#screen{
-  display:flex;
-  height:100vh;
-  width:100%;
-}
-
-/* LEFT SIDE – IMAGE */
-#imgBox{
-  width:60%;
-  height:100vh;
-  background:black;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  overflow:hidden;
-  position:relative;
-}
-
-#imgBox img{
-  max-width:100%;
-  max-height:100%;
-  width:auto;
-  height:auto;
-  object-fit:contain;
-}
-
-/* DARK OVERLAY FOR CINEMATIC LOOK */
-#imgBox::after{
-  content:"";
-  position:absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.25);
-}
-
-/* RIGHT SIDE – TEXT */
-#textBox{
-  width:40%;
-  padding:25px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  font-size:32px;
-  font-weight:bold;
-  line-height:1.4;
-  text-shadow:
-    0 0 10px #fff,
-    0 0 20px #ff00ff,
-    0 0 30px #ff00ff;
-}
-
-/* SCROLLING LINE */
-#scrollLine{
-  position:absolute;
-  bottom:-50px;
-  width:100%;
-  text-align:center;
-  font-size:22px;
-  color:#ffd700;
-  font-weight:bold;
-  animation:moveUp 9s linear infinite;
-}
-
-@keyframes moveUp{
-  0%{bottom:-50px;}
-  100%{bottom:100%;}
-}
-
-/* CONTROLS */
-#controls{
-  position:fixed;
-  bottom:0;
-  width:100%;
   background:#000;
-  padding:10px;
+  color:white;
   text-align:center;
 }
 
-input,textarea{
-  width:90%;
-  padding:10px;
-  margin:5px;
-  border-radius:10px;
-  border:none;
-  font-size:16px;
+/* START SCREEN */
+#startScreen{
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+}
+
+#startScreen h1{
+  font-size:32px;
+  margin-bottom:20px;
+  color:#ffd700;
 }
 
 button{
-  padding:10px 16px;
-  margin:5px;
+  padding:12px 20px;
   border:none;
   border-radius:10px;
   background:linear-gradient(90deg,#ff8c00,#ff0066);
   color:white;
   font-size:16px;
-  cursor:pointer;
-  box-shadow:0 0 10px #ff0066;
+  margin:8px;
+}
+
+/* SLIDE INPUT SCREEN */
+#creator{
+  display:none;
+  padding:15px;
+}
+
+input, textarea{
+  width:90%;
+  padding:10px;
+  margin:8px;
+  border-radius:8px;
+  border:none;
+  font-size:16px;
+}
+
+#previewImg{
+  width:90%;
+  max-height:220px;
+  object-fit:contain;
+  margin-top:10px;
+  background:#111;
+}
+
+#slideCounter{
+  margin-top:10px;
+  font-size:18px;
+  color:#ffd700;
 }
 </style>
 </head>
 <body>
 
-<div id="screen">
-
-  <!-- IMAGE -->
-  <div id="imgBox">
-    <img id="preview" src="">
-  </div>
-
-  <!-- TEXT -->
-  <div id="textBox">
-    यहाँ आपका विचार दिखाई देगा
-  </div>
-
+<!-- START SCREEN -->
+<div id="startScreen">
+  <h1>🎬 ShriVidya Reel Creator</h1>
+  <button onclick="startCreator()">Create New Reel</button>
 </div>
 
-<!-- SCROLL LINE -->
-<div id="scrollLine">सोच ही भविष्य बनाती है…</div>
+<!-- CREATOR SCREEN -->
+<div id="creator">
 
-<!-- CONTROLS -->
-<div id="controls">
+  <div id="slideCounter">Slide 1 / 10</div>
+
   <input type="file" accept="image/*" onchange="loadImage(event)">
-  <textarea id="textInput" placeholder="मुख्य विचार लिखें..."></textarea>
-  <input id="lineInput" placeholder="नीचे चलने वाली लाइन लिखें...">
+  <img id="previewImg" src="">
+
+  <textarea id="textInput" rows="6"
+    placeholder="यहाँ 4–5 लाइन का विचार लिखें..."></textarea>
 
   <br>
-  <button onclick="update()">✨ टेक्स्ट दिखाएँ</button>
-  <button onclick="speak()">🔊 महिला Voice</button>
+  <button onclick="prevSlide()">⬅ Back</button>
+  <button onclick="nextSlide()">Next ➡</button>
+
 </div>
 
 <script>
+let slides = [];
+let currentSlide = 0;
+
+function startCreator(){
+  startScreen.style.display="none";
+  creator.style.display="block";
+  loadSlide();
+}
+
 function loadImage(e){
   const file = e.target.files[0];
   if(!file) return;
-  preview.src = URL.createObjectURL(file);
-}
 
-function update(){
-  document.getElementById("textBox").innerText = textInput.value;
-  scrollLine.innerText = lineInput.value;
-}
-
-function speak(){
-  let text = textInput.value.trim();
-  if(text===""){
-    alert("पहले टेक्स्ट लिखें");
-    return;
+  const reader = new FileReader();
+  reader.onload = function(){
+    previewImg.src = reader.result;
+    slides[currentSlide] = slides[currentSlide] || {};
+    slides[currentSlide].image = reader.result;
   }
+  reader.readAsDataURL(file);
+}
 
-  let speech = new SpeechSynthesisUtterance(text);
-  speech.lang="hi-IN";
-  speech.pitch=1.5;   // female tone
-  speech.rate=0.9;
+function loadSlide(){
+  slideCounter.innerText = "Slide " + (currentSlide+1) + " / 10";
 
-  speechSynthesis.cancel();
-  setTimeout(()=>speechSynthesis.speak(speech),200);
+  const data = slides[currentSlide] || {};
+  previewImg.src = data.image || "";
+  textInput.value = data.text || "";
+}
+
+function saveSlide(){
+  slides[currentSlide] = slides[currentSlide] || {};
+  slides[currentSlide].text = textInput.value;
+}
+
+function nextSlide(){
+  saveSlide();
+  if(currentSlide < 9){
+    currentSlide++;
+    loadSlide();
+  } else {
+    alert("✔ 10 Slides तैयार हो गए!\nPart-2 में Play System जोड़ा जाएगा।");
+  }
+}
+
+function prevSlide(){
+  saveSlide();
+  if(currentSlide > 0){
+    currentSlide--;
+    loadSlide();
+  }
 }
 </script>
 
