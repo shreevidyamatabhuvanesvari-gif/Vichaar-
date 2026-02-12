@@ -3,11 +3,36 @@
 ========================= */
 
 const textStyles = [
-  "linear-gradient(90deg,#ffd700,#ff7f50,#ff1493)",
-  "linear-gradient(90deg,#00ffff,#ffffff,#ff00ff)",
-  "linear-gradient(90deg,#ffcc00,#ffffff)",
-  "linear-gradient(90deg,#ff6ec7,#7366ff)",
-  "linear-gradient(90deg,#ffffff,#ffd700,#00ffff)"
+
+  // Gold Premium
+  "linear-gradient(90deg,#ffd700,#fff5a0,#ffd700)",
+
+  // Pink – Purple
+  "linear-gradient(90deg,#ff6ec7,#7366ff,#ff6ec7)",
+
+  // Cyan – White – Blue
+  "linear-gradient(90deg,#00ffff,#ffffff,#00aaff)",
+
+  // Orange – Gold – Red
+  "linear-gradient(90deg,#ff8c00,#ffd700,#ff4500)",
+
+  // Spiritual mix
+  "linear-gradient(90deg,#ffffff,#ffd700,#ff00ff,#00ffff)",
+
+  // Sunset tone
+  "linear-gradient(90deg,#ff512f,#f09819)",
+
+  // Soft divine
+  "linear-gradient(90deg,#e0c3fc,#8ec5fc)",
+
+  // Deep royal
+  "linear-gradient(90deg,#5f2c82,#49a09d)",
+
+  // Gold glow
+  "linear-gradient(90deg,#fff8dc,#ffd700,#fff8dc)",
+
+  // Rainbow premium
+  "linear-gradient(90deg,#ff0000,#ffa500,#ffff00,#00ff00,#00ffff,#0000ff,#ff00ff)"
 ];
 
 let styleIndex = 0;
