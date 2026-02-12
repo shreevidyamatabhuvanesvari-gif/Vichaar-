@@ -228,16 +228,26 @@ function playSlide(){
   const imgEl = document.getElementById("previewImg");
   const blurEl = document.getElementById("bgBlur");
 
+  // Main photo
   imgEl.src = s.img || "";
-  blurEl.src = s.img || "";
-
   imgEl.style.objectFit = "contain";
-  blurEl.style.objectFit = "cover";
+
+  // Blur photo (अगर मौजूद हो)
+  if(blurEl){
+    blurEl.src = s.img || "";
+    blurEl.style.objectFit = "cover";
+  }
 
   document.getElementById("quotePreview").innerText =
     "“" + (s.text || "") + "”";
 
-  speakSlide(s.text);
+  // Voice
+  if(s.text){
+    speakSlide(s.text);
+  }else{
+    playIndex++;
+    playSlide();
+  }
 }
 
 /* IMPROVED HUMAN-LIKE VOICE */
