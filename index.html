@@ -26,21 +26,29 @@ body{
 
 /* PHOTO FRAME */
 #photoFrame{
+  width:90%;
+  height:40%;
   position:relative;
   overflow:hidden;
+  border-radius:22px;
+  background:#000;
+  box-shadow:0 0 20px rgba(0,0,0,0.7);
 }
 
+/* BLUR BACKGROUND */
 #bgBlur{
   position:absolute;
   width:100%;
   height:100%;
   top:0;
   left:0;
+  object-fit:cover;
   filter:blur(25px) brightness(0.6);
   transform:scale(1.2);
   z-index:1;
 }
 
+/* MAIN PHOTO */
 #previewImg{
   position:relative;
   z-index:2;
@@ -99,6 +107,7 @@ button{
   <div id="counter">Slide 1 / 10</div>
 
   <div id="photoFrame">
+    <img id="bgBlur">
     <img id="previewImg">
   </div>
 
@@ -129,21 +138,18 @@ document.getElementById("imgInput").addEventListener("change", function(e){
 
   const reader = new FileReader();
   reader.onload = function(){
-  const imgEl = document.getElementById("previewImg");
-  const blurEl = document.getElementById("bgBlur");
 
-  imgEl.src = reader.result;
-  blurEl.src = reader.result;
+    const imgEl = document.getElementById("previewImg");
+    const blurEl = document.getElementById("bgBlur");
 
-  // हमेशा contain → फोटो कभी नहीं कटेगी
-  imgEl.style.objectFit = "contain";
+    imgEl.src = reader.result;
+    blurEl.src = reader.result;
 
-  // blur background हमेशा on
-  blurEl.style.display = "block";
+    imgEl.style.objectFit = "contain";
 
-  slides[current] = slides[current] || {};
-  slides[current].img = reader.result;
-};
+    slides[current] = slides[current] || {};
+    slides[current].img = reader.result;
+  };
   reader.readAsDataURL(file);
 });
 
@@ -153,13 +159,13 @@ document.getElementById("quoteInput").addEventListener("input", function(){
   document.getElementById("quotePreview").innerText = "“" + text + "”";
 });
 
-/* SAVE CURRENT SLIDE */
+/* SAVE */
 function saveSlide(){
   slides[current] = slides[current] || {};
   slides[current].text = document.getElementById("quoteInput").value;
 }
 
-/* LOAD SLIDE */
+/* LOAD */
 function loadSlide(){
   document.getElementById("counter").innerText =
     "Slide " + (current+1) + " / 10";
@@ -167,6 +173,7 @@ function loadSlide(){
   const data = slides[current] || {};
 
   document.getElementById("previewImg").src = data.img || "";
+  document.getElementById("bgBlur").src = data.img || "";
   document.getElementById("quoteInput").value = data.text || "";
   document.getElementById("quotePreview").innerText =
     data.text ? "“" + data.text + "”" : "“यहाँ आपका सुविचार स्टाइल में दिखाई देगा”";
@@ -175,19 +182,17 @@ function loadSlide(){
 /* NEXT */
 function nextSlide(){
   saveSlide();
-
   if(current < 9){
     current++;
     loadSlide();
   }else{
-    alert("✔ 10 Slides तैयार हो गए!\nअब Reel Mode Part-2 में चलेगा।");
+    alert("✔ 10 Slides तैयार!");
   }
 }
 
 /* BACK */
 function prevSlide(){
   saveSlide();
-
   if(current > 0){
     current--;
     loadSlide();
@@ -196,20 +201,14 @@ function prevSlide(){
 </script>
 
 <script>
-
-/* REEL MODE */
-
 let playIndex = 0;
 
 function startReel(){
-
   saveSlide();
-
   if(slides.length < 1){
     alert("पहले slides भरें");
     return;
   }
-
   document.getElementById("controls").style.display="none";
   playIndex = 0;
   playSlide();
@@ -225,72 +224,43 @@ function playSlide(){
 
   const s = slides[playIndex];
 
-  const imgEl = document.getElementById("previewImg");
-  const blurEl = document.getElementById("bgBlur");
+  document.getElementById("previewImg").src = s.img || "";
+  document.getElementById("bgBlur").src = s.img || "";
+  document.getElementById("quotePreview").innerText = "“" + (s.text || "") + "”";
 
-  // Main photo
-  imgEl.src = s.img || "";
-  imgEl.style.objectFit = "contain";
-
-  // Blur photo (अगर मौजूद हो)
-  if(blurEl){
-    blurEl.src = s.img || "";
-    blurEl.style.objectFit = "cover";
-  }
-
-  document.getElementById("quotePreview").innerText =
-    "“" + (s.text || "") + "”";
-
-  // Voice
-  if(s.text){
-    speakSlide(s.text);
-  }else{
-    playIndex++;
-    playSlide();
-  }
+  speakSlide(s.text);
 }
 
-/* IMPROVED HUMAN-LIKE VOICE */
+/* HUMAN-LIKE VOICE */
 function speakSlide(text){
 
   const speech = new SpeechSynthesisUtterance(text);
 
-  function selectVoice(){
-    let voices = speechSynthesis.getVoices();
+  let voices = speechSynthesis.getVoices();
 
-    let bestVoice =
-      voices.find(v => v.lang === "hi-IN" && v.name.toLowerCase().includes("female")) ||
-      voices.find(v => v.lang === "hi-IN") ||
-      voices.find(v => v.name.toLowerCase().includes("female")) ||
-      voices.find(v => v.name.toLowerCase().includes("google")) ||
-      voices[0];
+  let bestVoice =
+    voices.find(v => v.lang === "hi-IN") ||
+    voices.find(v => v.name.toLowerCase().includes("female")) ||
+    voices[0];
 
-    if(bestVoice) speech.voice = bestVoice;
+  if(bestVoice) speech.voice = bestVoice;
 
-    speech.rate = 0.78;   // slower = more natural
-    speech.pitch = 1.15;  // softer tone
-    speech.volume = 1;
+  speech.rate = 0.78;
+  speech.pitch = 1.15;
 
-    speech.onend = function(){
-      setTimeout(()=>{
-        playIndex++;
-        playSlide();
-      },1000);
-    };
+  speech.onend = function(){
+    setTimeout(()=>{
+      playIndex++;
+      playSlide();
+    },1000);
+  };
 
-    speechSynthesis.cancel();
-    speechSynthesis.speak(speech);
-  }
-
-  if(speechSynthesis.getVoices().length === 0){
-    speechSynthesis.onvoiceschanged = selectVoice;
-  } else {
-    selectVoice();
-  }
+  speechSynthesis.cancel();
+  speechSynthesis.speak(speech);
 }
-
 </script>
-  <script src="reelStyle.js"></script>
+
+<script src="reelStyle.js"></script>
 
 </body>
 </html>
