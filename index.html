@@ -121,18 +121,16 @@ document.getElementById("imgInput").addEventListener("change", function(e){
   const reader = new FileReader();
   reader.onload = function(){
   const imgEl = document.getElementById("previewImg");
+  const blurEl = document.getElementById("bgBlur");
+
   imgEl.src = reader.result;
+  blurEl.src = reader.result;
 
-  const testImg = new Image();
-  testImg.src = reader.result;
+  // हमेशा contain → फोटो कभी नहीं कटेगी
+  imgEl.style.objectFit = "contain";
 
-  testImg.onload = function(){
-    if(testImg.height > testImg.width){
-      imgEl.style.objectFit = "cover";   // vertical
-    } else {
-      imgEl.style.objectFit = "contain"; // horizontal
-    }
-  };
+  // blur background हमेशा on
+  blurEl.style.display = "block";
 
   slides[current] = slides[current] || {};
   slides[current].img = reader.result;
