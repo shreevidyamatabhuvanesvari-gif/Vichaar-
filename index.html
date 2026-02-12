@@ -75,10 +75,19 @@ body{
   margin-top:12px;
   padding:14px;
   border-radius:14px;
-  background:rgba(0,0,0,0.5);
   font-size:20px;
   line-height:1.4;
   font-weight:bold;
+  position:relative;
+}
+
+#quotePreview::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.5);
+  border-radius:14px;
+  z-index:-1;
 }
 
 /* SLIDE COUNTER */
@@ -124,7 +133,7 @@ button{
   </div>
 
   <div id="quotePreview">
-    “यहाँ आपका सुविचार स्टाइल में दिखाई देगा”
+    यहाँ आपका सुविचार स्टाइल में दिखाई देगा
   </div>
 
 </div>
