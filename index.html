@@ -120,10 +120,23 @@ document.getElementById("imgInput").addEventListener("change", function(e){
 
   const reader = new FileReader();
   reader.onload = function(){
-    document.getElementById("previewImg").src = reader.result;
-    slides[current] = slides[current] || {};
-    slides[current].img = reader.result;
+  const imgEl = document.getElementById("previewImg");
+  imgEl.src = reader.result;
+
+  const testImg = new Image();
+  testImg.src = reader.result;
+
+  testImg.onload = function(){
+    if(testImg.height > testImg.width){
+      imgEl.style.objectFit = "cover";   // vertical
+    } else {
+      imgEl.style.objectFit = "contain"; // horizontal
+    }
   };
+
+  slides[current] = slides[current] || {};
+  slides[current].img = reader.result;
+};
   reader.readAsDataURL(file);
 });
 
