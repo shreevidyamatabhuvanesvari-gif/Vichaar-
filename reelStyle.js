@@ -1,38 +1,20 @@
 /* =========================
-   MULTICOLOR TEXT STYLE
+   ANIMATED MULTICOLOR TEXT
 ========================= */
 
 const textStyles = [
 
-  // Gold Premium
   "linear-gradient(90deg,#ffd700,#fff5a0,#ffd700)",
-
-  // Pink – Purple
   "linear-gradient(90deg,#ff6ec7,#7366ff,#ff6ec7)",
-
-  // Cyan – White – Blue
   "linear-gradient(90deg,#00ffff,#ffffff,#00aaff)",
-
-  // Orange – Gold – Red
   "linear-gradient(90deg,#ff8c00,#ffd700,#ff4500)",
-
-  // Spiritual mix
   "linear-gradient(90deg,#ffffff,#ffd700,#ff00ff,#00ffff)",
-
-  // Sunset tone
   "linear-gradient(90deg,#ff512f,#f09819)",
-
-  // Soft divine
   "linear-gradient(90deg,#e0c3fc,#8ec5fc)",
-
-  // Deep royal
   "linear-gradient(90deg,#5f2c82,#49a09d)",
-
-  // Gold glow
   "linear-gradient(90deg,#fff8dc,#ffd700,#fff8dc)",
-
-  // Rainbow premium
   "linear-gradient(90deg,#ff0000,#ffa500,#ffff00,#00ff00,#00ffff,#0000ff,#ff00ff)"
+
 ];
 
 let styleIndex = 0;
@@ -45,10 +27,25 @@ function applyMultiColorText(){
   if(styleIndex >= textStyles.length) styleIndex = 0;
 
   el.style.background = textStyles[styleIndex];
+  el.style.backgroundSize = "300% 300%";
   el.style.webkitBackgroundClip = "text";
   el.style.webkitTextFillColor = "transparent";
   el.style.fontWeight = "bold";
+
+  // Animation
+  el.style.animation = "gradientMove 6s linear infinite";
 }
+
+/* CSS animation dynamically add */
+const style = document.createElement("style");
+style.innerHTML = `
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+`;
+document.head.appendChild(style);
 
 
 /* =========================
@@ -72,8 +69,11 @@ window.addEventListener("load", function(){
 
   wm.style.background =
     "linear-gradient(90deg,#ffd700,#ff00ff,#00ffff,#ffffff,#ffd700)";
+  wm.style.backgroundSize = "300% 300%";
   wm.style.webkitBackgroundClip = "text";
   wm.style.webkitTextFillColor = "transparent";
+
+  wm.style.animation = "gradientMove 8s linear infinite";
 
   wm.style.textShadow =
     "0 0 6px rgba(255,215,0,0.5), 0 0 12px rgba(255,255,255,0.3)";
