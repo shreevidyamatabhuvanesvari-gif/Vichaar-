@@ -178,6 +178,7 @@ document.getElementById("imgInput").addEventListener("change", function(e){
 document.getElementById("quoteInput").addEventListener("input", function(){
   const text = this.value;
   document.getElementById("quotePreview").innerText = "“" + text + "”";
+  applyMultiColorText();
 });
 
 /* SAVE */
