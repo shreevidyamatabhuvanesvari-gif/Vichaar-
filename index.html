@@ -3,111 +3,131 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Thinking Voice Creator</title>
+<title>Voice Thought Creator</title>
 
 <style>
 body{
   margin:0;
-  background:linear-gradient(135deg,#000000,#1a0033);
+  background:radial-gradient(circle,#000000,#1a0033,#000000);
   font-family:'Noto Sans Devanagari',sans-serif;
   color:white;
   overflow:hidden;
   text-align:center;
 }
 
+/* Main Text */
 #mainText{
   position:absolute;
-  top:35%;
+  top:32%;
   width:100%;
-  font-size:30px;
-  padding:0 20px;
+  font-size:34px;
+  padding:0 25px;
   font-weight:bold;
-  text-shadow:0 0 15px rgba(255,255,255,0.7);
+  line-height:1.4;
+  color:#ffffff;
+  text-shadow:
+    0 0 10px #fff,
+    0 0 20px #ff00ff,
+    0 0 30px #ff00ff;
+  animation:fadeIn 1.5s ease;
 }
 
+@keyframes fadeIn{
+  from{opacity:0; transform:scale(0.9);}
+  to{opacity:1; transform:scale(1);}
+}
+
+/* Scrolling Line */
+#scrollLine{
+  position:absolute;
+  bottom:-60px;
+  width:100%;
+  font-size:22px;
+  color:#ffd700;
+  font-weight:bold;
+  animation:scrollUp 9s linear infinite;
+}
+
+@keyframes scrollUp{
+  0%{bottom:-60px;}
+  100%{bottom:100%;}
+}
+
+/* Controls */
 #controls{
   position:absolute;
-  bottom:15px;
+  bottom:10px;
   width:100%;
 }
 
-input,textarea{
-  width:85%;
+textarea,input{
+  width:88%;
   padding:10px;
   margin:5px;
-  border-radius:8px;
+  border-radius:10px;
   border:none;
   font-size:16px;
 }
 
 button{
-  padding:10px 18px;
+  padding:11px 18px;
   margin:6px;
   border:none;
-  border-radius:8px;
+  border-radius:10px;
   background:linear-gradient(90deg,#ff8c00,#ff0066);
   color:white;
-  font-size:15px;
+  font-size:16px;
   cursor:pointer;
-}
-
-#scrollLine{
-  position:absolute;
-  bottom:-50px;
-  width:100%;
-  font-size:20px;
-  color:#ffd700;
-  font-weight:bold;
-  animation:scrollUp 10s linear infinite;
-}
-
-@keyframes scrollUp{
-  0%{bottom:-50px;}
-  100%{bottom:100%;}
+  box-shadow:0 0 10px #ff0066;
 }
 </style>
 </head>
 <body>
 
-<div id="mainText">यहाँ आपका मुख्य विचार दिखेगा</div>
-<div id="scrollLine">जीवन एक खोज है...</div>
+<div id="mainText">यहाँ आपका विचार दिखाई देगा</div>
+<div id="scrollLine">सोच ही भविष्य बनाती है...</div>
 
 <div id="controls">
-  <textarea id="textInput" placeholder="मुख्य टेक्स्ट लिखें..."></textarea>
-  <input id="lineInput" placeholder="नीचे से ऊपर चलने वाली लाइन लिखें...">
+  <textarea id="textInput" placeholder="यहाँ मुख्य टेक्स्ट लिखें..."></textarea>
+  <input id="lineInput" placeholder="नीचे चलने वाली लाइन लिखें...">
 
   <br>
-  <button onclick="updateText()">टेक्स्ट सेट करें</button>
-  <button onclick="speakText()">🔊 महिला Voice चलाएँ</button>
+  <button onclick="updateText()">✨ टेक्स्ट दिखाएँ</button>
+  <button onclick="playVoice()">🔊 महिला आवाज चलाएँ</button>
 </div>
 
 <script>
 function updateText(){
-  mainText.innerText=textInput.value;
-  scrollLine.innerText=lineInput.value;
+  mainText.innerText = textInput.value;
+  scrollLine.innerText = lineInput.value;
 }
 
-function speakText(){
-  let text=textInput.value;
-  let speech=new SpeechSynthesisUtterance(text);
-  speech.lang="hi-IN";
-  speech.pitch=1.3;   // थोड़ी पतली आवाज़ (female tone)
-  speech.rate=0.9;
+/* FEMALE VOICE */
+function playVoice(){
 
-  let voices=speechSynthesis.getVoices();
+  let text = textInput.value;
 
-  // महिला voice ढूँढने की कोशिश
-  let femaleVoice=voices.find(v =>
-    v.name.toLowerCase().includes("female") ||
-    v.name.toLowerCase().includes("woman") ||
-    v.name.toLowerCase().includes("zira") ||
-    v.name.toLowerCase().includes("google हिन्दी")
-  );
-
-  if(femaleVoice){
-    speech.voice=femaleVoice;
+  if(text.trim()==""){
+    alert("पहले टेक्स्ट लिखें");
+    return;
   }
 
+  let speech = new SpeechSynthesisUtterance(text);
+  speech.lang="hi-IN";
+  speech.pitch=1.5;
+  speech.rate=0.9;
+
+  let voices = speechSynthesis.getVoices();
+
+  // Female type voice select
+  for(let v of voices){
+    if(v.name.includes("Google") || v.name.includes("female")){
+      speech.voice=v;
+      break;
+    }
+  }
+
+  speechSynthesis.cancel();
   speechSynthesis.speak(speech);
 }
 </script>
