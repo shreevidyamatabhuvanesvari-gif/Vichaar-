@@ -3,113 +3,77 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ShriVidya Reel Creator</title>
+<title>ShriVidya Poster Preview</title>
 
 <style>
 body{
   margin:0;
   font-family:'Noto Sans Devanagari',sans-serif;
-  background:#000;
-  color:white;
-  text-align:center;
-}
-
-/* START SCREEN */
-#startScreen{
   height:100vh;
+  overflow:hidden;
   display:flex;
-  flex-direction:column;
-  justify-content:center;
   align-items:center;
+  justify-content:center;
+  background:#000;
 }
 
-#startScreen h1{
-  font-size:32px;
-  margin-bottom:20px;
-  color:#ffd700;
-}
-
-/* BUTTONS */
-button{
-  padding:12px 20px;
-  border:none;
-  border-radius:10px;
-  background:linear-gradient(90deg,#ff8c00,#ff0066);
-  color:white;
-  font-size:16px;
-  margin:8px;
-}
-
-/* CREATOR */
-#creator{
-  display:none;
-  padding:15px;
-}
-
-input, textarea{
-  width:90%;
-  padding:10px;
-  margin:8px;
-  border-radius:8px;
-  border:none;
-  font-size:16px;
-}
-
-#previewImg{
-  width:90%;
-  max-height:220px;
-  object-fit:contain;
-  background:#111;
-}
-
-/* PLAYER */
-#player{
-  display:none;
-  position:fixed;
-  top:0;
-  left:0;
+/* MAIN POSTER */
+#poster{
+  position:relative;
   width:100%;
   height:100vh;
-  background:black;
   overflow:hidden;
 }
 
-#bgImg{
+/* BACKGROUND THEMES */
+.theme1{background:linear-gradient(135deg,#1a0026,#330066);}
+.theme2{background:linear-gradient(135deg,#3a2600,#806000);}
+.theme3{background:linear-gradient(135deg,#002626,#004d4d);}
+.theme4{background:linear-gradient(135deg,#1a1a1a,#333333);}
+
+/* PHOTO FRAME */
+#photoFrame{
   position:absolute;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  opacity:0;
-  transition:opacity 1s;
+  width:60%;
+  height:32%;
+  left:20%;
+  border-radius:22px;
+  overflow:hidden;
+  box-shadow:0 0 25px rgba(0,0,0,0.6);
+  background:#000;
 }
 
-#overlay{
-  position:absolute;
+/* IMAGE FIT */
+#photoFrame img{
   width:100%;
   height:100%;
-  background:rgba(0,0,0,0.35);
+  object-fit:contain;
 }
 
-/* TEXT */
-#mainText{
+/* TEXT PANEL */
+#textPanel{
   position:absolute;
-  top:8%;
-  width:100%;
-  font-size:28px;
+  width:80%;
+  left:10%;
+  padding:12px;
+  background:rgba(0,0,0,0.45);
+  border-radius:14px;
+  text-align:center;
+  font-size:24px;
   font-weight:bold;
   line-height:1.4;
-  padding:0 20px;
-  text-shadow:0 0 10px #fff,0 0 20px #ff00ff;
+  color:#fff;
 }
 
 /* WATERMARK */
 #watermark{
   position:absolute;
   bottom:10px;
-  right:15px;
-  font-size:18px;
+  width:100%;
+  text-align:center;
+  font-size:20px;
   font-weight:bold;
-  animation:colorChange 4s infinite alternate;
+  animation:colorChange 5s infinite alternate;
 }
 
 @keyframes colorChange{
@@ -120,140 +84,74 @@ input, textarea{
   100%{color:#ffffff}
 }
 
-#slideCounter{
-  margin-top:10px;
-  color:#ffd700;
+/* CONTROLS */
+#controls{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  background:#000;
+  padding:10px;
+  text-align:center;
+}
+
+input,textarea{
+  width:90%;
+  margin:5px;
+  padding:8px;
+  border-radius:8px;
+  border:none;
+}
+
+button{
+  padding:10px 16px;
+  margin:5px;
+  border:none;
+  border-radius:8px;
+  background:linear-gradient(90deg,#ff8c00,#ff0066);
+  color:white;
 }
 </style>
 </head>
 <body>
 
-<!-- START -->
-<div id="startScreen">
-  <h1>🎬 ShriVidya Reel Creator</h1>
-  <button onclick="startCreator()">Create New Reel</button>
-</div>
+<div id="poster" class="theme1">
 
-<!-- CREATOR -->
-<div id="creator">
-  <div id="slideCounter">Slide 1 / 10</div>
-
-  <input type="file" accept="image/*" onchange="loadImage(event)">
-  <img id="previewImg">
-
-  <textarea id="textInput" rows="6"
-    placeholder="यहाँ 4–5 लाइन का विचार लिखें..."></textarea>
-
-  <br>
-  <button onclick="prevSlide()">⬅ Back</button>
-  <button onclick="nextSlide()">Next ➡</button>
-
-  <div id="finishBox" style="display:none;">
-    <button onclick="playReel()">▶ Play Reel</button>
-    <button onclick="editSlides()">✏ Edit Slides</button>
+  <div id="photoFrame">
+    <img id="imgPreview">
   </div>
+
+  <div id="textPanel">यहाँ आपका सुविचार दिखेगा</div>
+
+  <div id="watermark">ShriVidya</div>
+
 </div>
 
-<!-- PLAYER -->
-<div id="player">
-  <img id="bgImg">
-  <div id="overlay"></div>
-  <div id="mainText"></div>
-  <div id="watermark">ShriVidya</div>
+<div id="controls">
+  <input type="file" accept="image/*" onchange="loadImage(event)">
+  <textarea id="quote" placeholder="4–5 लाइन का सुविचार लिखें"></textarea>
+  <br>
+  <button onclick="applyData()">Preview</button>
+  <button onclick="changeTheme()">Theme Change</button>
 </div>
 
 <script>
-let slides=[];
-let currentSlide=0;
-let playIndex=0;
-
-function startCreator(){
-  startScreen.style.display="none";
-  creator.style.display="block";
-  loadSlide();
-}
+let themeIndex=1;
 
 function loadImage(e){
   const file=e.target.files[0];
   const reader=new FileReader();
-  reader.onload=()=>{
-    previewImg.src=reader.result;
-    slides[currentSlide]=slides[currentSlide]||{};
-    slides[currentSlide].image=reader.result;
-  }
+  reader.onload=()=>imgPreview.src=reader.result;
   reader.readAsDataURL(file);
 }
 
-function loadSlide(){
-  slideCounter.innerText="Slide "+(currentSlide+1)+" / 10";
-  const data=slides[currentSlide]||{};
-  previewImg.src=data.image||"";
-  textInput.value=data.text||"";
+function applyData(){
+  textPanel.innerText=quote.value;
 }
 
-function saveSlide(){
-  slides[currentSlide]=slides[currentSlide]||{};
-  slides[currentSlide].text=textInput.value;
-}
-
-function nextSlide(){
-  saveSlide();
-  if(currentSlide<9){
-    currentSlide++;
-    loadSlide();
-  } else {
-    finishBox.style.display="block";
-  }
-}
-
-function prevSlide(){
-  saveSlide();
-  if(currentSlide>0){
-    currentSlide--;
-    loadSlide();
-  }
-}
-
-function editSlides(){
-  finishBox.style.display="none";
-  currentSlide=0;
-  loadSlide();
-}
-
-function playReel(){
-  creator.style.display="none";
-  player.style.display="block";
-  playIndex=0;
-  playSlide();
-}
-
-function playSlide(){
-  if(playIndex>=slides.length){
-    alert("Reel Finished");
-    player.style.display="none";
-    creator.style.display="block";
-    return;
-  }
-
-  const s=slides[playIndex];
-  bgImg.src=s.image;
-  bgImg.style.opacity=1;
-  mainText.innerText=s.text;
-
-  let speech=new SpeechSynthesisUtterance(s.text);
-  speech.lang="hi-IN";
-  speech.rate=0.85;
-  speech.pitch=1.4;
-
-  speech.onend=function(){
-    setTimeout(()=>{
-      bgImg.style.opacity=0;
-      playIndex++;
-      setTimeout(playSlide,900);
-    },1000);
-  };
-
-  speechSynthesis.speak(speech);
+function changeTheme(){
+  themeIndex++;
+  if(themeIndex>4) themeIndex=1;
+  poster.className="theme"+themeIndex;
 }
 </script>
 
