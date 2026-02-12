@@ -1,11 +1,13 @@
-/* MULTICOLOR TEXT STYLE ENGINE */
+/* =========================
+   MULTICOLOR TEXT STYLE
+========================= */
 
 const textStyles = [
-  "linear-gradient(90deg,#ffd700,#ff7f50,#ff1493)",   // gold-pink
-  "linear-gradient(90deg,#00ffff,#ffffff,#ff00ff)",   // cyan mix
-  "linear-gradient(90deg,#ffcc00,#ffffff)",           // soft gold
-  "linear-gradient(90deg,#ff6ec7,#7366ff)",           // pink-purple
-  "linear-gradient(90deg,#ffffff,#ffd700,#00ffff)"    // premium mix
+  "linear-gradient(90deg,#ffd700,#ff7f50,#ff1493)",
+  "linear-gradient(90deg,#00ffff,#ffffff,#ff00ff)",
+  "linear-gradient(90deg,#ffcc00,#ffffff)",
+  "linear-gradient(90deg,#ff6ec7,#7366ff)",
+  "linear-gradient(90deg,#ffffff,#ffd700,#00ffff)"
 ];
 
 let styleIndex = 0;
@@ -22,22 +24,35 @@ function applyMultiColorText(){
   el.style.webkitTextFillColor = "transparent";
   el.style.fontWeight = "bold";
 }
-/* COPYRIGHT TEXT AUTO ADD */
+
+
+/* =========================
+   PREMIUM WATERMARK
+========================= */
 
 window.addEventListener("load", function(){
 
-  const copy = document.createElement("div");
+  const wm = document.createElement("div");
 
-  copy.innerText = "© ShriVidya " + new Date().getFullYear();
+  wm.innerText = "© ShriVidya " + new Date().getFullYear();
 
-  copy.style.position = "fixed";
-  copy.style.bottom = "6px";
-  copy.style.width = "100%";
-  copy.style.textAlign = "center";
-  copy.style.fontSize = "14px";
-  copy.style.opacity = "0.8";
-  copy.style.color = "#ffffff";
+  wm.style.position = "fixed";
+  wm.style.bottom = "8px";
+  wm.style.width = "100%";
+  wm.style.textAlign = "center";
+  wm.style.fontSize = "15px";
+  wm.style.fontWeight = "bold";
+  wm.style.opacity = "0.75";
+  wm.style.pointerEvents = "none";
 
-  document.body.appendChild(copy);
+  wm.style.background =
+    "linear-gradient(90deg,#ffd700,#ff00ff,#00ffff,#ffffff,#ffd700)";
+  wm.style.webkitBackgroundClip = "text";
+  wm.style.webkitTextFillColor = "transparent";
+
+  wm.style.textShadow =
+    "0 0 6px rgba(255,215,0,0.5), 0 0 12px rgba(255,255,255,0.3)";
+
+  document.body.appendChild(wm);
 
 });
