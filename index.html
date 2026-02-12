@@ -207,7 +207,8 @@ function playSlide(){
 
   document.getElementById("previewImg").src = s.img || "";
   document.getElementById("quotePreview").innerText = "“" + (s.text || "") + "”";
-
+  
+applyMultiColorText();
   speakSlide(s.text);
 }
 
@@ -251,6 +252,7 @@ function speakSlide(text){
 }
 
 </script>
+  <script src="reelStyle.js"></script>
 
 </body>
 </html>
