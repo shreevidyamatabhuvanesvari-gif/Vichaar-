@@ -38,13 +38,6 @@ body{
   width:100%;
   height:100%;
   object-fit:contain;
-  animation: zoomMove 6s linear forwards;
-  transition: opacity 1s;
-}
-
-@keyframes zoomMove{
-  0%{transform:scale(1)}
-  100%{transform:scale(1.08)}
 }
 
 /* QUOTE STYLE */
@@ -57,7 +50,6 @@ body{
   font-size:20px;
   line-height:1.4;
   font-weight:bold;
-  min-height:60px;
 }
 
 /* SLIDE COUNTER */
@@ -120,7 +112,6 @@ button{
 <script>
 let slides = [];
 let current = 0;
-let playIndex = 0;
 
 /* IMAGE LOAD */
 document.getElementById("imgInput").addEventListener("change", function(e){
@@ -136,36 +127,19 @@ document.getElementById("imgInput").addEventListener("change", function(e){
   reader.readAsDataURL(file);
 });
 
-/* TYPING PREVIEW */
+/* QUOTE PREVIEW */
 document.getElementById("quoteInput").addEventListener("input", function(){
-  typeText(this.value);
+  const text = this.value;
+  document.getElementById("quotePreview").innerText = "“" + text + "”";
 });
 
-/* TYPE ANIMATION */
-function typeText(text){
-  const el = document.getElementById("quotePreview");
-  el.innerText = "“";
-  let i = 0;
-
-  function typing(){
-    if(i < text.length){
-      el.innerText += text.charAt(i);
-      i++;
-      setTimeout(typing, 25);
-    } else {
-      el.innerText += "”";
-    }
-  }
-  typing();
-}
-
-/* SAVE */
+/* SAVE CURRENT SLIDE */
 function saveSlide(){
   slides[current] = slides[current] || {};
   slides[current].text = document.getElementById("quoteInput").value;
 }
 
-/* LOAD */
+/* LOAD SLIDE */
 function loadSlide(){
   document.getElementById("counter").innerText =
     "Slide " + (current+1) + " / 10";
@@ -174,38 +148,52 @@ function loadSlide(){
 
   document.getElementById("previewImg").src = data.img || "";
   document.getElementById("quoteInput").value = data.text || "";
-  typeText(data.text || "");
+  document.getElementById("quotePreview").innerText =
+    data.text ? "“" + data.text + "”" : "“यहाँ आपका सुविचार स्टाइल में दिखाई देगा”";
 }
 
 /* NEXT */
 function nextSlide(){
   saveSlide();
+
   if(current < 9){
     current++;
     loadSlide();
-  } else {
-    alert("✔ 10 Slides तैयार!");
+  }else{
+    alert("✔ 10 Slides तैयार हो गए!\nअब Reel Mode Part-2 में चलेगा।");
   }
 }
 
 /* BACK */
 function prevSlide(){
   saveSlide();
+
   if(current > 0){
     current--;
     loadSlide();
   }
 }
+</script>
+  <script>
 
-/* START REEL */
+/* REEL MODE */
+
+let playIndex = 0;
+
 function startReel(){
+
   saveSlide();
+
+  if(slides.length < 1){
+    alert("पहले slides भरें");
+    return;
+  }
+
   document.getElementById("controls").style.display="none";
   playIndex = 0;
   playSlide();
 }
 
-/* PLAY SLIDE WITH FADE */
 function playSlide(){
 
   if(playIndex >= slides.length){
@@ -215,51 +203,44 @@ function playSlide(){
   }
 
   const s = slides[playIndex];
-  const img = document.getElementById("previewImg");
 
-  img.style.opacity = 0;
+  document.getElementById("previewImg").src = s.img || "";
+  document.getElementById("quotePreview").innerText = "“" + (s.text || "") + "”";
 
-  setTimeout(()=>{
-    img.src = s.img || "";
-    img.style.opacity = 1;
-
-    typeText(s.text || "");
-    speakSlide(s.text || "");
-
-  },600);
+  speakSlide(s.text);
 }
 
-/* HUMAN-LIKE VOICE */
+/* AUTO VOICE */
 function speakSlide(text){
 
   const speech = new SpeechSynthesisUtterance(text);
 
   let voices = speechSynthesis.getVoices();
 
-  // best soft voice select
   let bestVoice =
     voices.find(v => v.name.toLowerCase().includes("female")) ||
-    voices.find(v => v.name.toLowerCase().includes("google")) ||
     voices.find(v => v.lang === "hi-IN") ||
     voices[0];
 
   if(bestVoice) speech.voice = bestVoice;
 
-  speech.rate = 0.82;   // slow natural
-  speech.pitch = 1.2;   // soft tone
-  speech.volume = 1;
+  speech.rate = 0.85;
+  speech.pitch = 1.3;
 
   speech.onend = function(){
+
     setTimeout(()=>{
       playIndex++;
       playSlide();
     },1000);
+
   };
 
   speechSynthesis.cancel();
   speechSynthesis.speak(speech);
 }
-</script>
+
+  </script>
 
 </body>
 </html>
