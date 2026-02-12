@@ -22,3 +22,22 @@ function applyMultiColorText(){
   el.style.webkitTextFillColor = "transparent";
   el.style.fontWeight = "bold";
 }
+/* COPYRIGHT TEXT AUTO ADD */
+
+window.addEventListener("load", function(){
+
+  const copy = document.createElement("div");
+
+  copy.innerText = "© ShriVidya " + new Date().getFullYear();
+
+  copy.style.position = "fixed";
+  copy.style.bottom = "6px";
+  copy.style.width = "100%";
+  copy.style.textAlign = "center";
+  copy.style.fontSize = "14px";
+  copy.style.opacity = "0.8";
+  copy.style.color = "#ffffff";
+
+  document.body.appendChild(copy);
+
+});
