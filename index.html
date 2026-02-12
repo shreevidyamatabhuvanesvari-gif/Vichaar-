@@ -57,18 +57,6 @@ body{
   object-fit:cover;
 }
 
-#bgBlur{
-  position:absolute;
-  width:100%;
-  height:100%;
-  top:0;
-  left:0;
-  object-fit:cover;
-  filter:blur(25px) brightness(0.6);
-  transform:scale(1.2);
-  z-index:1;
-}
-
 /* QUOTE STYLE */
 #quotePreview{
   width:90%;
@@ -174,10 +162,11 @@ document.getElementById("imgInput").addEventListener("change", function(e){
   reader.readAsDataURL(file);
 });
 
-/* QUOTE PREVIEW */
+/* QUOTE PREVIEW (typing पर भी color) */
 document.getElementById("quoteInput").addEventListener("input", function(){
   const text = this.value;
   document.getElementById("quotePreview").innerText = "“" + text + "”";
+  applyMultiColorText();
 });
 
 /* SAVE */
@@ -198,6 +187,8 @@ function loadSlide(){
   document.getElementById("quoteInput").value = data.text || "";
   document.getElementById("quotePreview").innerText =
     data.text ? "“" + data.text + "”" : "“यहाँ आपका सुविचार स्टाइल में दिखाई देगा”";
+
+  applyMultiColorText();   /* ← Back/Next पर भी color */
 }
 
 /* NEXT */
@@ -248,7 +239,7 @@ function playSlide(){
   document.getElementById("previewImg").src = s.img || "";
   document.getElementById("bgBlur").src = s.img || "";
   document.getElementById("quotePreview").innerText = "“" + (s.text || "") + "”";
-  applyMultiColorText();
+  applyMultiColorText();   /* ← Play mode में color */
 
   speakSlide(s.text);
 }
