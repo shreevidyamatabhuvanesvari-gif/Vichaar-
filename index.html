@@ -225,10 +225,18 @@ function playSlide(){
 
   const s = slides[playIndex];
 
-  document.getElementById("previewImg").src = s.img || "";
-  document.getElementById("quotePreview").innerText = "“" + (s.text || "") + "”";
-  
-applyMultiColorText();
+  const imgEl = document.getElementById("previewImg");
+  const blurEl = document.getElementById("bgBlur");
+
+  imgEl.src = s.img || "";
+  blurEl.src = s.img || "";
+
+  imgEl.style.objectFit = "contain";
+  blurEl.style.objectFit = "cover";
+
+  document.getElementById("quotePreview").innerText =
+    "“" + (s.text || "") + "”";
+
   speakSlide(s.text);
 }
 
